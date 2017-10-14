@@ -1,9 +1,10 @@
 import React  ,{Component} from  'react';
+import {PropTypes} from 'prop-types';
 import {Card, CardMedia, CardTitle, CardText, CardActions} from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
-import { blue200,blue900} from 'material-ui/styles/colors';
+import { blue200,lightBlue800,lightBlue50} from 'material-ui/styles/colors';
 
 const styles={
   chip:{
@@ -19,14 +20,38 @@ const styles={
 };
 
  export default class Player extends Component{
+  showEditForm(){
+    this.props.showEditForm();
+  }
 
    render(){
+      const  defense=this.props.player.duelTackling
+                      + this.props.player.fieldCoverage
+                      + this.props.player.blockingAbilities
+                      + this.props.player.gameStrategy
+                      + this.props.player.playmakingRisks;
+      const  offense=this.props.player.KickingAbilities
+                     + this.props.player.gameStrategy
+                     + this.props.player.ballManipulation
+                     + this.props.player.passingAbilities
+                     + this.props.player.fieldCoverage
+                     + this.props.player.playmakingRisks;
+      const total=this.props.player.KickingAbilities
+                     + this.props.player.gameStrategy
+                     + this.props.player.ballManipulation
+                     + this.props.player.passingAbilities
+                     + this.props.player.fieldCoverage
+                     + this.props.player.playmakingRisks
+                     + this.props.player.duelTackling
+                     + this.props.player.blockingAbilities;
      return(
        <Card>
          <CardMedia
-             overlay={<CardTitle title="Mohammed Mimouni" subtitle="Offense: 15 - Defense: 15" />}
+             overlay={<CardTitle title={this.props.player.name}
+               subtitle={`Offense: ${offense} - Defense: ${defense} - Total: ${total}`} />}
          >
-           <img src="player.jpg" alt="" />
+           {/* <img src={this.props.player._id && this.props.player.avatar ? this.props.player._id + ".jpg" : "player.jpg" } alt="" /> */}
+           <img src={this.props.player.name + ".jpg"} alt="No image" />
          </CardMedia>
          <CardText>
            <div style={styles.wrapper}>
@@ -34,8 +59,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.ballManipulation}
                 </Avatar>
                 Ball manipulation
               </Chip>
@@ -43,8 +68,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.KickingAbilities}
                 </Avatar>
                 Kicking abilities
               </Chip>
@@ -52,8 +77,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.passingAbilities}
                 </Avatar>
                 Passing abilities
               </Chip>
@@ -61,8 +86,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.duelTackling}
                 </Avatar>
                 Duel/Tackling abilities
               </Chip>
@@ -70,8 +95,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.fieldCoverage}
                 </Avatar>
                 Field speed coverage
               </Chip>
@@ -79,8 +104,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.blockingAbilities}
                 </Avatar>
                 Blocking abilities
               </Chip>
@@ -88,8 +113,8 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.gameStrategy}
                 </Avatar>
                 Game strategy
               </Chip>
@@ -97,17 +122,25 @@ const styles={
                 backgroundColor={blue200}
                 style={styles.chip}
                 >
-                <Avatar size={32} color={blue200} backgroundColor={blue900}>
-                  10
+                <Avatar size={32} color={lightBlue50} backgroundColor={lightBlue800}>
+                  {this.props.player.playmakingRisks}
                 </Avatar>
                 Playmaking risks
               </Chip>
           </div> {/* Chips wrapper */}
          </CardText>
          <CardActions>
-
+          <RaisedButton
+              label="Edit Player/Stats"
+              labelPosition="before"
+              style={styles.button}
+              onClick={this.showEditForm.bind(this)}
+             />
          </CardActions>
        </Card>
      );
    }
  }
+Player.propTypes={
+  player: PropTypes.object.isRequired,
+}

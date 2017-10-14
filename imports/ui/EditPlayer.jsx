@@ -1,6 +1,5 @@
 import React  ,{Component} from  'react';
-import { Meteor } from 'meteor/meteor';
-import { Link } from 'react-router-dom'
+import {PropTypes} from 'prop-types'
 import { red500} from 'material-ui/styles/colors';
 const styles={
   alert:{
@@ -16,14 +15,16 @@ const styles={
 };
 
 
-export default class New extends Component{
-  constructor(props){
-    super(props);
+export default class EditPlayer extends Component{
 
+  showTeamStats(){
+    this.props.showTeamStats();
   }
-   submitPlayer(event){
+
+   editPlayer(event){
      event.preventDefault();
-     let newPlayer={
+     let updatePlayer={
+       _id:this.props.player._id,
        name:this.refs.name.value,
        team:this.refs.team.value, //players's team
        ballManipulation:parseInt(this.refs.ballManipulation.value),
@@ -35,19 +36,19 @@ export default class New extends Component{
        gameStrategy:parseInt(this.refs.gameStrategy.value),
        playmakingRisks:parseInt(this.refs.playmakingRisks.value),
        notes:this.refs.notes.value, //notes for the player for coach
-       createdAt:new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-       owner: "Meteor.userId()",
+       owner: Meteor.userId(),
       //  createdAt and owner must be added in the server
      }
-     Meteor.call('insert.player',
-                  newPlayer,
+  Meteor.call('update.player',
+                  updatePlayer,
                   (err, res) => {
                       if (err) {
                       $('#err-container').html('<strong>Oups! Something went wrong. The reason is: </strong>' + err.reason);
 
-                      } else {
+                      }else {
                         // success!
-                         this.props.history.push('/');
+                        this.showTeamStats();
+                        //  this.props.history.push('/');
                       }
                  });
 
@@ -55,25 +56,28 @@ export default class New extends Component{
    }//submitPlayer
 
    render(){
+     const currentPlayer=this.props.player;
      return(
         <div className="row">
-          <form className="col s12" onSubmit={this.submitPlayer.bind(this)}>
-            <h3>Add a new player</h3>
+          <form className="col s12" onSubmit={this.editPlayer.bind(this)}>
+            <h3>Update player</h3>
             <div id="err-container" style={styles.alert}>
             </div> {/*Error container*/}
             <div className="row">
               <div className="input-field col s6">
-                <input placeholder="Name" ref="name" type="text" className="validate"/>
+                <input placeholder="Name" ref="name" type="text" className="validate"
+                  defaultValue={this.props.player.name}/>
               </div>
               <div className="input-field col s6">
-                <input placeholder="Team" ref="team" type="text" className="validate"/>
+                <input placeholder="Team" ref="team" type="text" className="validate"
+                  defaultValue={this.props.player.team}/>
               </div>
             </div> {/* 1 row */}
 
             <div className="row">
               <div className=" col s6">
                 <h5>Ball manipulation</h5>
-                <select  className="browser-default" ref="ballManipulation" >
+                <select  className="browser-default" ref="ballManipulation" defaultValue={this.props.player.ballManipulation}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -82,7 +86,7 @@ export default class New extends Component{
               </div>
               <div className="col s6">
                 <h5>Kicking abilities</h5>
-                <select className="browser-default" ref="KickingAbilities">
+                <select className="browser-default" ref="KickingAbilities" defaultValue={this.props.player.KickingAbilities}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -94,7 +98,7 @@ export default class New extends Component{
             <div className="row">
               <div className=" col s6">
                 <h5>Passing abilities</h5>
-                <select  className="browser-default" ref="passingAbilities" >
+                <select  className="browser-default" ref="passingAbilities" defaultValue={this.props.player.passingAbilities} >
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -103,7 +107,7 @@ export default class New extends Component{
               </div>
               <div className="col s6">
                 <h5>Duel tackling</h5>
-                <select className="browser-default" ref="duelTackling">
+                <select className="browser-default" ref="duelTackling" defaultValue={this.props.player.duelTackling}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -115,7 +119,7 @@ export default class New extends Component{
             <div className="row">
               <div className=" col s6">
                 <h5>Field coverage - speed</h5>
-                <select  className="browser-default" ref="fieldCoverage" >
+                <select  className="browser-default" ref="fieldCoverage" defaultValue={this.props.player.fieldCoverage}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -124,7 +128,7 @@ export default class New extends Component{
               </div>
               <div className=" col s6">
                 <h5>Blocking abilities</h5>
-                <select  className="browser-default" ref="blockingAbilities" >
+                <select  className="browser-default" ref="blockingAbilities" defaultValue={this.props.player.blockingAbilities}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -136,7 +140,7 @@ export default class New extends Component{
             <div className="row">
               <div className="col s6">
                 <h5>Game strategy</h5>
-                <select className="browser-default" ref="gameStrategy">
+                <select className="browser-default" ref="gameStrategy" defaultValue={this.props.player.gameStrategy}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -145,7 +149,7 @@ export default class New extends Component{
               </div>
               <div className=" col s6">
                 <h5>Playmaking risks</h5>
-                <select  className="browser-default" ref="playmakingRisks" >
+                <select  className="browser-default" ref="playmakingRisks" defaultValue={this.props.player.playmakingRisks}>
                   <option value="0">O - Hasn't demonstrated skills</option>
                   <option value="1">1 - Needs improvement</option>
                   <option value="2">2 - Skill acquired</option>
@@ -155,11 +159,11 @@ export default class New extends Component{
             </div> {/* 5 row */}
             <div className="row">
               <div className="input-field col s6">
-                <textarea placeholder="Notes" ref="notes" className="materialize-textarea"/>
+                <textarea placeholder="Notes" ref="notes" className="materialize-textarea"
+                  defaultValue={this.props.player.notes}/>
               </div>
               <div className="input-field col s6">
-                <Link to="/" className="red-effect red-light btn" style={styles.cancel}>Cancel</Link>
-                <button className="btn waves-effect waves-light light-blue darken-3" type="submit" name="action">Submit
+                <button className="btn waves-effect waves-light light-blue darken-3" type="submit" name="action">Update
                   <i className="material-icons right">send</i>
                 </button>
               </div>
@@ -168,4 +172,8 @@ export default class New extends Component{
         </div>
      );
    }
+ }
+
+ EditPlayer.propTypes={
+   player: PropTypes.object.isRequired,
  }

@@ -11,15 +11,6 @@ import Lost from '../imports/ui/Lost.jsx';
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-// const insert=(player)=>{
-//   Players.insert(player);
-// }
-// const _New = (props) => {
-//       return (
-//         <New insert={insert} {...props} />
-//       );
-// }
-
 
 const App = () => (
   <Switch>
